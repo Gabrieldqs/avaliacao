@@ -18,10 +18,10 @@
 
 		<div class="corpo">
 			<table>
-				@foreach($data as $value)
+				@foreach($data as $aluno)
 				<tr> 
-					<td class="nomes">{{ $value->nome }}</td>
-					<td>{{ $value->nota }}</td>
+					<td class="nomes">{{ $aluno->nome }}</td>
+					<td>{{ $aluno->nota }}</td>
 				</tr>
 				@endforeach
 			</table>	

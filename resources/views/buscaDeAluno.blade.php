@@ -29,9 +29,7 @@
                     <td><input type="submit" name="submit" value="buscar" id="submit"></td>
                 </tr>
 
-                @if(empty($aluno))
-
-                @else
+                @if(!empty($aluno))
                 <tr>
                     <td class="campo">Nome</td>
                     <td>{{$aluno->nome or '' }}</td>
