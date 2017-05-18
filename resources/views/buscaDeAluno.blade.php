@@ -1,18 +1,55 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        @extends('layouts.master')
-        @section('title', 'Busca de Aluno')
-    </head>
 
-    <style>
-    .campo{
-        width: 100px;
-    }
-    #campo1{
-        width: 100px;
-    }
-    </style>
+@extends('layouts.master')
+@section('title', 'Busca de Aluno')
+
+@section('buscaAtivo','class="active"')
+
+@section('conteudo')
+
+<div class="row">
+    <form action="buscar" method="post">
+        {{ csrf_field() }}
+
+        <div class="col-xs-3">
+            <label>Nome:</label>
+            <input type="text" name="nome" class="form-control">
+            <button type="submit" name="submit" value="buscar" class="btn btn-primary">Buscar</button>
+        </div>
+
+      
+
+        <div class="col-md-6">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Matricula</th>
+                <th>Nota</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Bairro</th>
+              </tr>
+            </thead>
+            @if(!empty($aluno))
+            <tbody>
+              <tr>
+                <td>{{ $aluno->nome }}</td>
+                <td>{{ $aluno->matricula }}</td>
+                <td>{{ $aluno->nota }}</td>
+                <td>{{ $endereco->rua }}</td>
+                <td>{{ $endereco->numero }}</td>
+                <td>{{ $endereco->bairro }}</td>
+              </tr>
+            </tbody>
+            @endif
+          </table>
+        </div>
+    </form>
+</div> 
+
+@endsection
+
+<!---
 
 <body>
     <div class="botoes">

@@ -1,17 +1,53 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		@extends('layouts.master')
-		@section('title', 'Cadastrar')
-	</head>
-	
-	<style>
 
-	.campo{
-		margin-left: 20px;
-		width: 200px;
-	}
 
+@extends('layouts.master')
+
+@section('title','Cadastrar')
+
+@section('cadastrarAtivo','class="active"')
+
+@section('conteudo')
+ <div class="container">
+  <form action="salvar" method="post">
+  	{{ csrf_field() }}
+
+    <div class="form-group ">
+      <label>Nome: </label>
+      <input type="text" class="form-control input-sm"  placeholder="Nome do aluno" name="nome">
+    </div>
+
+    <div class="form-group">
+      <label>Matrícula: </label>
+      <input type="text" class="form-control" placeholder="Número de matrícula" name="matricula">
+    </div>
+
+    <div class="form-group">
+      <label>Nota: </label>
+      <input type="text" class="form-control" placeholder="Nota" name="nota">
+    </div>
+
+    <div class="form-group">
+      <label>Rua: </label>
+      <input type="text" class="form-control" placeholder="Rua do endereço" name="rua">
+    </div>
+
+    <div class="form-group">
+      <label>Número: </label>
+      <input type="text" class="form-control" placeholder="Número do endereço" name="numero">
+    </div>
+
+    <div class="form-group">
+      <label>Bairro: </label>
+      <input type="text" class="form-control" placeholder="Bairro do endereço" name="bairro">
+    </div>
+
+    <button type="submit" value="salvar" class="btn btn-primary">Salvar</button>
+
+  </form>
+</div>
+@endsection
+
+<!--
 	</style>
 <body>
 	<div class="botoes">
