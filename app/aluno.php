@@ -13,10 +13,16 @@ class aluno extends Authenticatable
      */
     public $timestamps = false;
 
-    protected $fillable = [
-        'nome', 'numero', 'matricula','nota','endereco_id'
+    protected $fillable = ['nome','matricula','nota','endereco_id'];
+    
+    public $rules = [
+        'nome' => 'required|max:255',
+        'matricula' => 'required|numeric|unique:alunos',
+        'nota' => 'required|numeric|min:0|max:10'
     ];
 
-    
+    public $rulesBusca = [
+        'nome' => 'required|max:255',
+    ];
 
 }

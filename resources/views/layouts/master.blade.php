@@ -32,8 +32,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <style>
-  body { padding-top: 70px; }</style>
+  <style> body { padding-top: 70px; }</style>
   
   <body>
 
@@ -47,7 +46,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand">CRUD simples</a>
+          
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -62,12 +61,9 @@
 
     <div class="container theme-showcase" role="main">
 
-    <!-- CONTEUDO ENTRA AQUI -->
+    <!-- CONTEUDO AQUI -->
      
     @yield('conteudo')
-
-
-
 
     <!-- /container -->
 

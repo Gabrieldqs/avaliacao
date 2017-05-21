@@ -23,53 +23,77 @@ class Controller extends BaseController
     	$numero = $req->input('numero');
     	$bairro = $req->input('bairro');
 
+        $aluno = new \App\aluno;
+        $endereco = new \App\endereco;
 
+        //validacoes
+        $errosAluno = [
+            'nome.required' => 'O nome é obrigatório',
+            'nome.max' => 'O nome está grande demais',
+            'matricula.required' => 'A matrícula é obrigatória',
+            'matricula.numeric' => 'A matrícula deve conter apenas números',
+            'matricula.unique' => 'A matrícula já existe',
+            'nota.required' => 'A nota é obrigatória',
+            'nota.numeric' => 'A nota deve conter apenas números',
+            'nota.min' => 'O valor mínimo da nota é 0',
+            'nota.max' => 'O valor máximo da nota é 10',
+        ];
+        $errosEndereco = [
+            'rua.required' => 'O nome da rua é obrigatório',
+            'rua.max' => 'O nome da rua está grande demais',
+            'numero.required' => 'O número do endereço é obrigatório',
+            'numero.numeric' => 'O número do endereço deve conter apenas números',
+            'bairro.required' => 'O nome do bairro é obrigatório',
+            'bairro.max' => 'O nome do bairro é grande demais',
+        ];
 
-    	//Checa se a matrícula já existe
-    	if(count(DB::table('alunos')->where('matricula','=', $matricula)->value('id'))>0){
-    		echo 'Matrícula já existe';
-    	}
+        $this->validate($req , $aluno->rules, $errosAluno);
+        $this->validate($req , $endereco->rules, $errosEndereco);
 
-    	//Checa se existem campos vazios
-    	else if(empty($nome)or empty($matricula)or empty($nota)or empty($rua)or empty($numero)or empty($bairro)){
-    		echo 'Existem campos vazios';
-    	}
-
-    	//Caso a matricula seja válida e campos preenchidos
-    	else{
-    		//Obtém o id do endereço digitado
-	    	$id = DB::table('enderecos')->where([['rua', '=', $rua],['numero', '=', $numero],['bairro', '=', $bairro]])->value('id');
+    	//Caso tudo esteja valido
+    	//Obtém o id do endereço digitado
+	    $id = $endereco->where([['rua', '=', $rua],['numero', '=', $numero],['bairro', '=', $bairro]])->value('id');
 	    	
-	    	//Se o endereço ainda não está cadastrado, o cadastro é feito
-	    	if(count($id)==0){
-	    		$data = array('rua'=>$rua,'numero'=>$numero,'bairro'=>$bairro);
-	    		DB::table('enderecos')->insert($data);
-	    		$id = DB::table('enderecos')->where([['rua', '=', $rua],['numero', '=', $numero],['bairro', '=', $bairro]])->value('id');
-	    	}
-
-	    	//Insere o novo aluno com o endereço digitado
-	    	$data = array('nome'=>$nome,'matricula'=>$matricula,'nota'=>$nota,'endereco_id'=>$id);
-	    	DB::table('alunos')->insert($data);
-            
-	    	return back();
+	    //Se o endereço ainda não está cadastrado, o cadastro é feito
+	    if(count($id)==0){
+	    	$data = array('rua'=>$rua,'numero'=>$numero,'bairro'=>$bairro);
+	    	$endereco->create($data);
+	    	$id = $endereco->where([['rua', '=', $rua],['numero', '=', $numero],['bairro', '=', $bairro]])->value('id');
 	    }
-    	
+
+	    //Insere o novo aluno com o endereço digitado
+	    $data = array('nome'=>$nome,'matricula'=>$matricula,'nota'=>$nota,'endereco_id'=>$id);
+        $aluno->create($data);
+
+        $msg = 'Cadastro efetuado!';
+	    return(view('cadastrar',['mensagem'=>$msg]));
     }
+
 
     function buscar(Request $req){
 
     	$nome = $req->input('nome');
-        //Se campo nao estiver vazio
-        if(!empty($nome))
-    	    $aluno =  DB::table('alunos')->where('nome','like',$nome."%")->first();
+
+        $alunotemp = new \App\aluno;
+        $enderecotemp = new \App\endereco;
+
+        //validacao
+        $erros = ['nome.required' => 'O nome está vazio'];
+        $this->validate($req , $alunotemp->rulesBusca,$erros);
+
+        //obtem os dados do aluno
+    	$aluno = $alunotemp->where('nome','like',$nome."%")->first();
 
         //Se o aluno existir
         if(!empty($aluno)){
-            $endereco = DB::table('enderecos')->join('alunos','enderecos.id','=','alunos.endereco_id')->where('alunos.endereco_id','=',$aluno->endereco_id)->first();
-    		return view('buscaDeAluno',['aluno'=>$aluno,'endereco'=>$endereco]);
+            $endereco = $enderecotemp->join('alunos','enderecos.id','=','alunos.endereco_id')->where('alunos.endereco_id','=',$aluno->endereco_id)->first();
+    		
+            //return redirect()->route('buscaDeAluno',['aluno'=>$aluno,'endereco'=>$endereco]);
+            return view('buscaDeAluno',['aluno'=>$aluno,'endereco'=>$endereco]);
         }
-    	else 
-    		echo 'Esse aluno não existe';
+    	else{
+            return redirect()->route('buscaDeAluno');
+        }
     }
 
 }
